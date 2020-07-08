@@ -16,4 +16,9 @@ if __name__ == '__main__':
 
     html_soup = BeautifulSoup(get_pagina(arg.query).text, 'html.parser')
 
-
+    if html_soup.findAll('p', {'class': 'mw-search-nonefound'}):
+        print('Dados não encontrados')
+    else:
+        site_container = html_soup.find_all(id='content')
+        for t in site_container:
+            print(t.text)

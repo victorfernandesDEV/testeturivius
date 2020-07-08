@@ -1,4 +1,4 @@
-from argparse import ArgumentParser
+import sys
 import requests
 from bs4 import BeautifulSoup
 
@@ -15,21 +15,18 @@ def get_pagina(query):
 
 if __name__ == '__main__':
 
-    # variavel que armazena a query informada na CLI com a ajuda da lib argparse
+    # variavel que armazena a query informada na CLI com a ajuda da lib sys
 
-    parser = ArgumentParser()
-    parser.add_argument('query', help='Informe a query desejada')
-
-    arg = parser.parse_args()
+    parser = " ".join(sys.argv[1:])
 
     # variavel que instancia a lib BeautifulSoup e armazena os dados da requisição feita no metodo get_pagina
 
-    html_soup = BeautifulSoup(get_pagina(arg.query).text, 'html.parser')
+    html_soup = BeautifulSoup(get_pagina(parser).text, 'html.parser')
 
     # condicional que valida se há dados na consulta, retorna uma mensagem padrão em caso negativo e, em caso positivo
     # retorna os dados em texto plano
 
-    if html_soup.findAll('p', {'class': 'mw-search-nonefound'}):
+    if html_soup.findAll('p', {'class': 'mw-search-nonefound'}) or html_soup.findAll('p', {'class': 'mw-search-createlink'}):
         print('Dados não encontrados')
     else:
         site_container = html_soup.find_all(id='content')
